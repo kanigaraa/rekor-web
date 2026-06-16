@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  APPLICANT
+  REVIEWER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  ACCEPTED
+  REJECTED
+}
+
+enum LogAction {
+  REGISTER
+  LOGIN
+  LOGOUT
+  CREATE_APPLICATION
+  UPDATE_APPLICATION
+  SUBMIT_APPLICATION
+  REVIEW_APPLICATION
+  UPDATE_STATUS
+  CHANGE_ROLE
+}
+
+model User {
+  id           String @id @default(cuid())
+  name         String
+  email        String @unique
+  passwordHash String
+  role         Role   @default(APPLICANT)
+
+  sessions     Session[]
+  applications Application[]
+  reviews      Review[]
+  activityLogs ActivityLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([role])
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+
+  userAgent String?
+  ipAddress String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Application {
+  id          String @id @default(cuid())
+  applicantId String
+
+  fullName    String
+  phone       String
+  major       String
+  batch       String
+  division    String
+  motivation  String
+
+  cvUrl        String?
+  portfolioUrl String?
+
+  status ApplicationStatus @default(DRAFT)
+
+  applicant User     @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  reviews   Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicantId])
+  @@index([status])
+  @@index([division])
+}
+
+model Review {
+  id            String @id @default(cuid())
+  applicationId String
+  reviewerId    String
+
+  score Int
+  note  String?
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  reviewer    User        @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicationId])
+  @@index([reviewerId])
+}
+
+model ActivityLog {
+  id     String    @id @default(cuid())
+  userId String?
+  action LogAction
+
+  description String?
+  ipAddress   String?
+  userAgent   String?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
