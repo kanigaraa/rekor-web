@@ -1,56 +1,65 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 export function Navbar() {
   return (
-    <nav className="sticky top-0 z-10 border-b border-border bg-surface/95 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex min-w-0 items-center gap-3">
-          <Image src="/Rekor.png" alt="Rekor Logo" width={40} height={40} />
-          <span className="min-w-0">
-            <span className="block text-base font-semibold leading-5 text-text-primary">
+    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 h-16 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
+          <Image src="/Rekor.png" alt="Rekor Logo" width={36} height={36} className="rounded-md" />
+          <div className="hidden sm:block">
+            <span className="block text-lg font-bold leading-tight tracking-tight text-text-primary">
               Rekor
             </span>
-            <span className="block text-xs font-medium text-text-muted">
-              Rekrut Organisasi
-            </span>
-          </span>
+          </div>
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
-          <a
-            href="#alur"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
+        <div className="hidden md:flex items-center gap-8">
+          <Link
+            href="/"
+            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
           >
-            Alur
-          </a>
+            Beranda
+          </Link>
           <a
             href="#fitur"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
+            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
           >
-            Fitur
+            Fitur Utama
           </a>
-          <Link
-            href="/login"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
+          <a
+            href="#alur"
+            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
           >
-            Masuk
-          </Link>
+            Alur Rekrutmen
+          </a>
+          <a
+            href="#kontak"
+            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
+          >
+            Hubungi Kami
+          </a>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="inline-flex h-10 items-center justify-center rounded-md border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:hidden"
-          >
-            Masuk
-          </Link>
-          <Link
-            href="/register"
-            className="inline-flex h-10 items-center justify-center rounded-md border border-primary bg-primary px-4 text-sm font-medium text-white transition-colors hover:border-primary-hover hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            Daftar
-          </Link>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
+            <Link href="/login" tabIndex={-1}>
+              <Button variant="ghost" className="h-9 px-4">
+                Masuk
+              </Button>
+            </Link>
+            <Link href="/register" tabIndex={-1}>
+              <Button variant="default" className="h-9 px-4 shadow-sm">
+                Daftar Gratis
+              </Button>
+            </Link>
+          </div>
+          <Button variant="ghost" className="sm:hidden px-2 h-9">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle Menu</span>
+          </Button>
         </div>
       </div>
     </nav>
