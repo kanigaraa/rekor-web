@@ -25,14 +25,14 @@ export function DashboardShell({
   return (
     <div className="min-h-screen bg-background text-text-primary lg:flex">
       <Sidebar role={role} activeHref={activeHref} />
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 relative">
         <DashboardNavbar
           role={role}
           items={items}
           activeHref={activeHref}
           userName={userName}
         />
-        <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+        <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
           {children}
         </main>
       </div>

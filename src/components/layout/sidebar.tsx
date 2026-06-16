@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { SidebarItem } from "./sidebar-item";
 
@@ -55,17 +56,12 @@ export function Sidebar({ role, activeHref = "/dashboard" }: SidebarProps) {
     <aside className="hidden min-h-screen w-64 shrink-0 border-r border-border bg-surface lg:flex lg:flex-col">
       <div className="border-b border-border px-5 py-5">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary text-sm font-semibold text-white">
-            R
-          </span>
-          <span>
-            <span className="block text-base font-semibold leading-5 text-text-primary">
-              Rekor
-            </span>
-            <span className="block text-xs font-medium text-text-muted">
-              Rekrut Organisasi
-            </span>
-          </span>
+          <Image
+            src="/Rekor.png"
+            alt="Rekor Logo"
+            width={50}
+            height={50}
+          ></Image>
         </Link>
       </div>
 
