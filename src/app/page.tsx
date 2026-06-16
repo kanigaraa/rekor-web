@@ -97,12 +97,12 @@ export default function Home() {
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link href="/register" tabIndex={-1}>
-                <Button className="w-full sm:w-auto h-12 px-8 text-base shadow-lg hover:shadow-primary/25 transition-all">
+                <Button className="w-full sm:w-auto h-12 px-8 text-base shadow-lg hover:shadow-primary/25 transition-all cursor-pointer">
                   Mulai Daftar Gratis <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/login" tabIndex={-1}>
-                <Button variant="outline" className="w-full sm:w-auto h-12 px-8 text-base">
+                <Button variant="outline" className="w-full sm:w-auto h-12 px-8 text-base cursor-pointer">
                   Masuk ke Dashboard
                 </Button>
               </Link>
@@ -218,7 +218,7 @@ export default function Home() {
               Buat proses pendaftaran lebih terstruktur dari awal sampai akhir. Bergabung dengan puluhan organisasi lainnya sekarang.
             </p>
             <Link href="/register" tabIndex={-1}>
-              <Button variant="secondary" className="h-12 px-8 text-base font-semibold text-primary bg-white hover:bg-gray-50 border-none shadow-md">
+              <Button variant="secondary" className="h-12 px-8 text-base font-semibold text-primary bg-white hover:bg-gray-50 border-none shadow-md cursor-pointer">
                 Daftar Sekarang Secara Gratis
               </Button>
             </Link>
