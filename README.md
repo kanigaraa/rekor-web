@@ -1,14 +1,39 @@
 # Rekor - Rekrut Organisasi
 
-**Rekor** adalah aplikasi web untuk mengelola proses rekrutmen anggota atau staff organisasi secara aman, terstruktur, dan mudah dikelola.
+**Rekor** adalah aplikasi web untuk mengelola proses **Open Recruitment BEM UPNVJ** secara aman, terstruktur, dan mudah digunakan.
 
-Project ini dibuat sebagai **Project UAS Mata Kuliah Keamanan Jaringan** dengan fokus pada analisis dan implementasi keamanan aplikasi web, khususnya pada mekanisme autentikasi, manajemen session, password hashing, Role Based Access Control (RBAC), serta penggunaan HTTPS/TLS.
+Project ini dibuat sebagai **Project UAS Mata Kuliah Keamanan Jaringan** dengan studi kasus sistem rekrutmen organisasi mahasiswa. Pada versi MVP ini, Rekor digunakan sebagai website pendaftaran open recruitment BEM UPNVJ untuk satu periode rekrutmen, dengan beberapa pilihan bidang/kementerian/biro yang dapat dipilih oleh pendaftar.
 
 ## Deskripsi Project
 
-Rekor dirancang untuk membantu organisasi dalam mengelola proses rekrutmen, mulai dari pendaftaran akun, pengisian formulir pendaftaran, penilaian oleh reviewer, hingga pengelolaan status pendaftar oleh admin.
+Rekor dirancang untuk membantu proses Open Recruitment BEM UPNVJ, mulai dari pendaftaran akun, pengisian formulir pendaftaran, pemilihan bidang/kementerian/biro, penilaian oleh reviewer, hingga pengelolaan status pendaftar oleh admin.
 
-Karena aplikasi ini menyimpan data penting seperti identitas pendaftar, akun pengguna, hasil review, status seleksi, dan informasi session, maka diperlukan mekanisme keamanan yang baik agar data tetap terlindungi.
+Aplikasi ini menyimpan data penting seperti akun pengguna, data pendaftar, pilihan bidang, motivasi, CV/portofolio, hasil review, status seleksi, dan session login. Oleh karena itu, Rekor menerapkan beberapa mekanisme keamanan seperti login aman, session management, password hashing, Role Based Access Control (RBAC), protected route, dan activity log.
+
+## Konsep Aplikasi
+
+Rekor bukan marketplace organisasi dan bukan platform untuk banyak organisasi berbeda.
+
+Pada MVP ini, Rekor berfokus pada satu konteks utama:
+
+> Website Open Recruitment BEM UPNVJ untuk satu periode rekrutmen.
+
+Pendaftar dapat melihat informasi open recruitment, memilih bidang/kementerian/biro yang tersedia, mengisi formulir pendaftaran, lalu memantau status seleksinya melalui dashboard.
+
+## Catatan Data Bidang
+
+Daftar bidang/kementerian/biro pada project ini digunakan sebagai **data simulasi untuk kebutuhan UAS**. Nama bidang dapat disesuaikan kembali apabila tim memiliki struktur resmi terbaru dari BEM UPNVJ.
+
+Contoh bidang yang digunakan pada MVP:
+
+* Biro Kesekretariatan
+* Biro Keuangan dan Pendanaan
+* Biro Media dan Informasi
+* Kementerian Advokasi dan Kesejahteraan Mahasiswa
+* Kementerian Sosial Politik
+* Kementerian Ekonomi Kreatif
+* Departemen Kajian Strategis
+* Departemen Kemitraan Strategis
 
 ## Tujuan Project
 
@@ -17,22 +42,21 @@ Tujuan dari project ini adalah:
 * Mengidentifikasi aset informasi yang perlu dilindungi pada aplikasi rekrutmen organisasi.
 * Menganalisis ancaman dan risiko keamanan pada aplikasi web.
 * Mengevaluasi tata kelola keamanan menggunakan kontrol sederhana dari ISO 27001.
-* Mengimplementasikan mekanisme keamanan pada layer 5, 6, dan 7.
-* Melakukan pengujian keamanan terhadap fitur autentikasi, session, dan otorisasi pengguna.
+* Mengimplementasikan mekanisme keamanan pada layer 5, 6, dan 7 OSI.
+* Melakukan pengujian keamanan terhadap fitur autentikasi, session, otorisasi, dan akses data.
+* Membuat sistem open recruitment BEM UPNVJ yang rapi dan mudah digunakan.
 
 ## Tech Stack
-
-Project ini menggunakan teknologi berikut:
 
 ### Frontend
 
 * **Next.js** - Framework React untuk membangun aplikasi web.
-* **TypeScript** - Supaya kode lebih aman dan mudah dikelola.
-* **Tailwind CSS** - Untuk styling tampilan secara cepat dan responsif.
+* **TypeScript** - Untuk menjaga type safety dan struktur kode.
+* **Tailwind CSS** - Untuk styling tampilan secara cepat, konsisten, dan responsif.
 
 ### Backend
 
-* **Next.js API Routes / Route Handler** - Untuk membuat endpoint backend langsung di dalam project Next.js.
+* **Next.js Route Handler** - Untuk membuat API langsung di dalam project Next.js.
 * **Prisma ORM** - Untuk mengelola database dengan lebih rapi.
 * **PostgreSQL** - Database utama aplikasi.
 * **bcryptjs** - Untuk melakukan hashing password.
@@ -41,34 +65,40 @@ Project ini menggunakan teknologi berikut:
 ### Security
 
 * **Password Hashing** menggunakan bcrypt.
-* **Session Management** menggunakan cookie `httpOnly`.
+* **Session Management** menggunakan database session dan cookie `httpOnly`.
 * **Role Based Access Control (RBAC)** untuk membatasi akses berdasarkan role.
-* **HTTPS/TLS** untuk mengamankan komunikasi data.
 * **Protected Route** untuk mencegah akses halaman tanpa autentikasi.
+* **HTTPS/TLS** untuk mengamankan komunikasi data saat production.
 * **Activity Log** untuk mencatat aktivitas penting pengguna.
+
+### Development Tools
+
+* **npm / Bun** - Package manager.
+* **Git & GitHub** - Version control dan repository project.
+* **Husky** - Git hooks.
+* **ESLint** - Linting kode.
+* **VS Code** - Code editor.
 
 ## Role Pengguna
 
-Aplikasi Rekor memiliki beberapa role pengguna:
-
-| Role        | Deskripsi                                                                            |
-| ----------- | ------------------------------------------------------------------------------------ |
-| Applicant   | Pendaftar organisasi yang dapat mengisi form pendaftaran dan melihat status seleksi. |
-| Reviewer    | Pengguna yang bertugas menilai data pendaftar.                                       |
-| Admin       | Pengguna yang mengelola data pendaftar dan status seleksi.                           |
-| Super Admin | Pengguna dengan hak akses tertinggi untuk mengelola user, role, dan log aktivitas.   |
+| Role        | Deskripsi                                                                         |
+| ----------- | --------------------------------------------------------------------------------- |
+| Applicant   | Pendaftar Open Recruitment BEM UPNVJ.                                             |
+| Reviewer    | Pengguna yang bertugas menilai data pendaftar.                                    |
+| Admin       | Pengguna yang mengelola data pendaftar dan status seleksi.                        |
+| Super Admin | Pengguna dengan hak akses tertinggi untuk mengelola user, role, dan activity log. |
 
 ## Fitur Utama
 
-Fitur utama yang dirancang dalam aplikasi Rekor:
-
-* Register akun pengguna.
+* Landing page Open Recruitment BEM UPNVJ.
+* Register akun pendaftar.
 * Login dan logout aman.
 * Dashboard berdasarkan role pengguna.
-* Form pendaftaran organisasi.
-* Melihat status pendaftaran.
+* Form pendaftaran open recruitment.
+* Pilihan bidang/kementerian/biro.
+* Halaman status pendaftaran.
 * Reviewer dapat melihat dan menilai pendaftar.
-* Admin dapat mengelola data pendaftar.
+* Admin dapat mengelola data pendaftar dan status seleksi.
 * Super Admin dapat mengelola user dan role.
 * Session management.
 * Password hashing.
@@ -85,7 +115,9 @@ Beberapa aset informasi yang perlu dilindungi dalam aplikasi ini adalah:
 * Nama lengkap pendaftar.
 * Email pengguna.
 * Nomor telepon.
-* Jurusan atau asal instansi.
+* Jurusan atau asal fakultas.
+* Angkatan.
+* Pilihan bidang/kementerian/biro.
 * Data form pendaftaran.
 * Link CV atau portofolio.
 * Nilai dan catatan reviewer.
@@ -103,21 +135,20 @@ Beberapa aset informasi yang perlu dilindungi dalam aplikasi ini adalah:
 
 ## Rancangan Halaman
 
-Beberapa halaman utama dalam aplikasi Rekor:
-
-| Route                         | Deskripsi                                  |
-| ----------------------------- | ------------------------------------------ |
-| `/`                           | Landing page aplikasi Rekor.               |
-| `/login`                      | Halaman login pengguna.                    |
-| `/register`                   | Halaman register akun.                     |
-| `/dashboard`                  | Dashboard pengguna berdasarkan role.       |
-| `/apply`                      | Form pendaftaran organisasi.               |
-| `/my-application`             | Status pendaftaran milik pendaftar.        |
-| `/reviewer/applications`      | Daftar pendaftar untuk reviewer.           |
-| `/reviewer/applications/[id]` | Detail pendaftar dan form review.          |
-| `/admin/applications`         | Dashboard admin untuk mengelola pendaftar. |
-| `/admin/users`                | Halaman pengelolaan user dan role.         |
-| `/unauthorized`               | Halaman akses ditolak.                     |
+| Route                         | Deskripsi                                    |
+| ----------------------------- | -------------------------------------------- |
+| `/`                           | Landing page Open Recruitment BEM UPNVJ.     |
+| `/login`                      | Halaman login pengguna.                      |
+| `/register`                   | Halaman register akun.                       |
+| `/dashboard`                  | Dashboard pengguna berdasarkan role.         |
+| `/apply`                      | Form pendaftaran Open Recruitment BEM UPNVJ. |
+| `/my-application`             | Status pendaftaran milik pendaftar.          |
+| `/reviewer/applications`      | Daftar pendaftar untuk reviewer.             |
+| `/reviewer/applications/[id]` | Detail pendaftar dan form review.            |
+| `/admin/applications`         | Dashboard admin untuk mengelola pendaftar.   |
+| `/admin/users`                | Halaman pengelolaan user dan role.           |
+| `/admin/activity-logs`        | Halaman activity log.                        |
+| `/unauthorized`               | Halaman akses ditolak.                       |
 
 ## Database Schema
 
@@ -127,18 +158,23 @@ Database aplikasi dirancang dengan beberapa tabel utama:
 | ----------- | ------------------------------------------------------------- |
 | User        | Menyimpan data akun, email, password hash, dan role pengguna. |
 | Session     | Menyimpan session login pengguna.                             |
-| Application | Menyimpan data pendaftaran organisasi.                        |
+| Application | Menyimpan data pendaftaran Open Recruitment BEM UPNVJ.        |
 | Review      | Menyimpan penilaian reviewer terhadap pendaftar.              |
 | ActivityLog | Menyimpan catatan aktivitas penting pengguna.                 |
 
+Catatan:
+
+* Field `division` pada database digunakan untuk menyimpan pilihan bidang/kementerian/biro.
+* Pada UI, istilah yang ditampilkan adalah **Bidang/Kementerian/Biro**.
+* MVP ini tidak menggunakan model `Organization` karena sistem hanya digunakan untuk satu konteks Open Recruitment BEM UPNVJ.
+
 ## Struktur Folder
 
-Struktur folder project secara umum:
-
 ```bash
-rekor/
+rekor-web/
 ├── prisma/
 │   └── schema.prisma
+├── public/
 ├── src/
 │   ├── app/
 │   │   ├── api/
@@ -155,11 +191,24 @@ rekor/
 │   │   ├── admin/
 │   │   └── unauthorized/
 │   ├── components/
+│   │   ├── ui/
+│   │   ├── layout/
+│   │   ├── auth/
+│   │   ├── application/
+│   │   └── dashboard/
 │   ├── lib/
+│   │   ├── prisma.ts
+│   │   ├── session.ts
+│   │   ├── auth.ts
+│   │   ├── rbac.ts
+│   │   ├── validations.ts
+│   │   └── activity-log.ts
 │   └── generated/
 ├── .env
+├── .env.example
 ├── package.json
-└── README.md
+├── README.md
+└── PRD.md
 ```
 
 ## Instalasi Project
@@ -167,20 +216,20 @@ rekor/
 Clone repository:
 
 ```bash
-git clone https://github.com/username/rekor.git
-cd rekor
+git clone https://github.com/kanigaraa/rekor-web.git
+cd rekor-web
 ```
 
 Install dependencies:
 
 ```bash
-bun install
+npm install
 ```
 
 Jalankan development server:
 
 ```bash
-bun run dev
+npm run dev
 ```
 
 Buka aplikasi di browser:
@@ -226,8 +275,6 @@ Logout dilakukan dengan menghapus session pengguna dari database dan menghapus c
 
 Password pengguna tidak disimpan dalam bentuk plain text. Password akan di-hash menggunakan bcrypt sebelum disimpan ke database.
 
-Contoh alur:
-
 ```text
 password asli → bcrypt hash → passwordHash disimpan di database
 ```
@@ -249,10 +296,10 @@ RBAC digunakan untuk membatasi akses berdasarkan role pengguna.
 
 Contoh:
 
-* Applicant hanya dapat mengakses halaman pendaftaran miliknya sendiri.
+* Applicant hanya dapat mengakses form dan status pendaftaran miliknya sendiri.
 * Reviewer hanya dapat mengakses halaman review pendaftar.
-* Admin dapat mengelola data pendaftar.
-* Super Admin dapat mengelola user dan role.
+* Admin dapat mengelola data pendaftar dan status seleksi.
+* Super Admin dapat mengelola user, role, dan activity log.
 
 ### 5. HTTPS/TLS
 
@@ -260,29 +307,40 @@ HTTPS/TLS digunakan untuk melindungi komunikasi antara client dan server agar da
 
 ## Pengujian Keamanan
 
-Beberapa pengujian keamanan yang dilakukan:
-
-| Pengujian                             | Tujuan                                              |
-| ------------------------------------- | --------------------------------------------------- |
-| Login dengan password salah           | Memastikan sistem menolak kredensial tidak valid.   |
-| Akses halaman tanpa login             | Memastikan protected route berjalan.                |
-| Akses halaman admin sebagai applicant | Memastikan RBAC berjalan.                           |
-| Logout lalu akses dashboard           | Memastikan session benar-benar dihapus.             |
-| Cek password di database              | Memastikan password tersimpan dalam bentuk hash.    |
-| Manipulasi role dari frontend         | Memastikan role tetap divalidasi di server.         |
-| Cek cookie session                    | Memastikan cookie menggunakan konfigurasi keamanan. |
+| Pengujian                               | Tujuan                                              |
+| --------------------------------------- | --------------------------------------------------- |
+| Login dengan password salah             | Memastikan sistem menolak kredensial tidak valid.   |
+| Akses halaman tanpa login               | Memastikan protected route berjalan.                |
+| Akses halaman admin sebagai applicant   | Memastikan RBAC berjalan.                           |
+| Logout lalu akses dashboard             | Memastikan session benar-benar dihapus.             |
+| Cek password di database                | Memastikan password tersimpan dalam bentuk hash.    |
+| Manipulasi role dari frontend           | Memastikan role tetap divalidasi di server.         |
+| Cek cookie session                      | Memastikan cookie menggunakan konfigurasi keamanan. |
+| Applicant mengakses data applicant lain | Memastikan otorisasi data berjalan.                 |
 
 ## Kaitan dengan ISO 27001 Controls
 
-Project ini menggunakan beberapa kontrol keamanan sederhana yang relevan dengan ISO 27001, seperti:
+| Area Kontrol           | Implementasi                                   |
+| ---------------------- | ---------------------------------------------- |
+| Access Control         | RBAC, protected route, role validation.        |
+| Authentication         | Login menggunakan email dan password.          |
+| Cryptography           | Password hashing dengan bcrypt dan HTTPS/TLS.  |
+| Logging and Monitoring | Activity log untuk mencatat aktivitas penting. |
+| Secure Development     | Validasi input dan error handling.             |
+| User Access Management | Pengelolaan role oleh super admin.             |
 
-| Area Kontrol                             | Implementasi                                            |
-| ---------------------------------------- | ------------------------------------------------------- |
-| Access Control                           | RBAC, protected route, role validation.                 |
-| Authentication                           | Login menggunakan email dan password.                   |
-| Cryptography                             | Password hashing dengan bcrypt dan HTTPS/TLS.           |
-| Logging and Monitoring                   | Activity log untuk mencatat aktivitas penting.          |
-| Information Security Incident Management | Identifikasi akses tidak sah dan percobaan login gagal. |
+## Scope MVP
+
+Pada MVP ini, Rekor tidak mendukung multi-organisasi. Artinya, aplikasi tidak menyediakan daftar banyak organisasi atau banyak event open recruitment.
+
+Scope aplikasi hanya mencakup:
+
+* Satu periode Open Recruitment BEM UPNVJ.
+* Beberapa pilihan bidang/kementerian/biro.
+* Satu form pendaftaran per applicant.
+* Review dan pengelolaan status pendaftar.
+* Pengelolaan role user.
+* Activity log.
 
 ## Status Project
 
@@ -294,6 +352,9 @@ Fokus utama project:
 * Implementasi session management.
 * Implementasi password hashing.
 * Implementasi RBAC.
+* Implementasi form pendaftaran.
+* Implementasi review pendaftar.
+* Implementasi pengelolaan status seleksi.
 * Implementasi pengujian keamanan sederhana.
 * Penyusunan laporan audit keamanan aplikasi.
 
