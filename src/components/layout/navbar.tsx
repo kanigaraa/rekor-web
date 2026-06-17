@@ -21,31 +21,10 @@ export function Navbar() {
           </div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
-          <Link
-            href="/"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary cursor-pointer"
-          >
-            Beranda
-          </Link>
-          <a
-            href="#fitur"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary cursor-pointer"
-          >
-            Fitur Utama
-          </a>
-          <a
-            href="#alur"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary cursor-pointer"
-          >
-            Alur Rekrutmen
-          </a>
-        </div>
-
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-3">
             <Link href="/login" tabIndex={-1}>
-              <Button variant="ghost" className="h-9 px-4 cursor-pointer">
+              <Button variant="outline" className="h-9 px-4 cursor-pointer">
                 Masuk
               </Button>
             </Link>
