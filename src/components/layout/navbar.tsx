@@ -21,42 +21,15 @@ export function Navbar() {
           </div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
-          <Link
-            href="/"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
-          >
-            Beranda
-          </Link>
-          <a
-            href="#fitur"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
-          >
-            Fitur Utama
-          </a>
-          <a
-            href="#alur"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
-          >
-            Alur Rekrutmen
-          </a>
-          <a
-            href="#kontak"
-            className="text-sm font-medium text-text-secondary transition-colors hover:text-primary"
-          >
-            Hubungi Kami
-          </a>
-        </div>
-
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-3">
             <Link href="/login" tabIndex={-1}>
-              <Button variant="ghost" className="h-9 px-4">
+              <Button variant="outline" className="h-9 px-4 cursor-pointer">
                 Masuk
               </Button>
             </Link>
             <Link href="/register" tabIndex={-1}>
-              <Button variant="default" className="h-9 px-4 shadow-sm">
+              <Button variant="default" className="h-9 px-4 shadow-sm cursor-pointer">
                 Daftar Gratis
               </Button>
             </Link>
@@ -100,13 +73,6 @@ export function Navbar() {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Alur Rekrutmen
-            </a>
-            <a
-              href="#kontak"
-              className="block rounded-md px-3 py-2 text-base font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Hubungi Kami
             </a>
             <div className="mt-4 flex flex-col gap-2 border-t border-border/40 pt-4">
               <Link href="/login" tabIndex={-1} onClick={() => setIsMobileMenuOpen(false)}>
