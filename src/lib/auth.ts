@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/lib/session";
 import { getSessionToken, getValidSession } from "@/lib/session";
@@ -35,7 +36,10 @@ export async function requireUser(request?: NextRequest) {
   const user = await getCurrentUser(request);
 
   if (!user) {
-    throw new AuthError(401, "Unauthorized");
+    if (request) {
+      throw new AuthError(401, "Unauthorized");
+    }
+    redirect("/login");
   }
 
   return user;
@@ -48,7 +52,10 @@ export async function requireRole(
   const user = await requireUser(request);
 
   if (!isRoleAllowed(user.role, allowedRoles)) {
-    throw new AuthError(403, "Forbidden");
+    if (request) {
+      throw new AuthError(403, "Forbidden");
+    }
+    redirect("/unauthorized");
   }
 
   return user;
