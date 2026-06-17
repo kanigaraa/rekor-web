@@ -1,5 +1,5 @@
+import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-
 import { PrismaClient } from "@/generated/prisma/client";
 
 const globalForPrisma = globalThis as typeof globalThis & {
@@ -15,12 +15,20 @@ function createPrismaClient() {
 
   // Enable SSL for Supabase connections (pooler or direct)
   const isSupabase = connectionString.includes("supabase.com") || connectionString.includes("supabase.co");
-  const adapter = new PrismaPg({
+  
+  const pool = new Pool({
     connectionString,
     ...(isSupabase && {
       ssl: { rejectUnauthorized: false },
     }),
   });
+
+  // Handle idle pool client errors to prevent crash loops
+  pool.on("error", (err) => {
+    console.error("Unexpected error on idle pg client:", err);
+  });
+
+  const adapter = new PrismaPg(pool);
 
   return new PrismaClient({ adapter });
 }
