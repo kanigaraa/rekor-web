@@ -2,6 +2,7 @@
 
 import type { FormEvent } from "react";
 
+import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,12 +18,18 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 const divisions = [
-  "Product & Tech",
-  "Creative",
-  "Operations",
-  "Human Resources",
-  "Partnership",
+  "Biro Kesekretariatan",
+  "Biro Keuangan dan Pendanaan",
+  "Biro Media dan Informasi",
+  "Kementerian Advokasi dan Kesejahteraan Mahasiswa",
+  "Kementerian Sosial Politik",
+  "Kementerian Ekonomi Kreatif",
+  "Departemen Kajian Strategis",
+  "Departemen Kemitraan Strategis",
 ];
+
+// TODO: Replace this mock user with server-side auth once session handling is ready.
+const mockUserName = "Khaliz";
 
 export default function ApplyPage() {
   function handleSaveDraft() {
@@ -35,14 +42,15 @@ export default function ApplyPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background px-4 py-8 text-text-primary sm:px-6 lg:px-8">
-      <form
-        className="mx-auto w-full max-w-4xl space-y-6"
-        onSubmit={handleSubmitApplication}
-      >
+    <DashboardShell
+      role="APPLICANT"
+      userName={mockUserName}
+      activeHref="/apply"
+    >
+      <form className="space-y-6" onSubmit={handleSubmitApplication}>
         <PageHeader
           title="Form Pendaftaran"
-          description="Lengkapi data pendaftaran organisasi dengan informasi yang benar."
+          description="Lengkapi data Open Recruitment BEM UPNVJ."
         />
 
         <Card className="shadow-none">
@@ -58,7 +66,7 @@ export default function ApplyPage() {
                 name="fullName"
                 type="text"
                 autoComplete="name"
-                placeholder="Nama lengkap"
+                placeholder="Masukkan nama lengkap"
                 required
               />
             </div>
@@ -102,15 +110,15 @@ export default function ApplyPage() {
 
         <Card className="shadow-none">
           <CardHeader>
-            <CardTitle>Pilihan Divisi</CardTitle>
-            <CardDescription>Pilih divisi dan tulis motivasi.</CardDescription>
+            <CardTitle>Pilihan Bidang</CardTitle>
+            <CardDescription>Pilih bidang dan tulis motivasi.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="division">Divisi</Label>
+              <Label htmlFor="division">Bidang/Kementerian/Biro</Label>
               <Select id="division" name="division" defaultValue="" required>
                 <option value="" disabled>
-                  Pilih divisi
+                  Pilih bidang
                 </option>
                 {divisions.map((division) => (
                   <option key={division} value={division}>
@@ -126,6 +134,7 @@ export default function ApplyPage() {
                 id="motivation"
                 name="motivation"
                 placeholder="Tulis motivasi kamu bergabung"
+                className="min-h-36"
                 required
               />
             </div>
@@ -135,7 +144,7 @@ export default function ApplyPage() {
         <Card className="shadow-none">
           <CardHeader>
             <CardTitle>Dokumen Pendukung</CardTitle>
-            <CardDescription>Gunakan link CV dan portofolio.</CardDescription>
+            <CardDescription>Gunakan URL CV dan portofolio.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-5 md:grid-cols-2">
             <div className="space-y-2">
@@ -175,6 +184,6 @@ export default function ApplyPage() {
           </Button>
         </div>
       </form>
-    </main>
+    </DashboardShell>
   );
 }
