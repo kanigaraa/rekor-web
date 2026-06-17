@@ -4,9 +4,11 @@
 
 **Rekor** adalah singkatan dari **Rekrut Organisasi**.
 
-Rekor adalah aplikasi web untuk mengelola proses rekrutmen anggota atau staff organisasi secara aman, terstruktur, dan mudah digunakan. Aplikasi ini dibuat sebagai **Project UAS Mata Kuliah Keamanan Jaringan**.
+Rekor adalah aplikasi web untuk mengelola proses **Open Recruitment BEM UPNVJ** secara aman, terstruktur, dan mudah digunakan. Aplikasi ini dibuat sebagai **Project UAS Mata Kuliah Keamanan Jaringan**.
 
-Fokus utama project ini bukan hanya membuat fitur rekrutmen, tetapi juga mengimplementasikan mekanisme keamanan aplikasi web seperti:
+Pada MVP ini, Rekor digunakan untuk satu periode Open Recruitment BEM UPNVJ. Pendaftar dapat membuat akun, memilih bidang/kementerian/biro yang tersedia, mengisi form pendaftaran, dan memantau status seleksi. Reviewer dapat menilai pendaftar, sedangkan admin dapat mengelola status seleksi.
+
+Fokus utama project ini adalah mengimplementasikan fitur rekrutmen dengan mekanisme keamanan aplikasi web seperti:
 
 * Login dan logout aman.
 * Session management.
@@ -25,18 +27,22 @@ Project ini dibuat untuk memenuhi tugas:
 
 Aplikasi XYZ dalam project ini adalah:
 
-> **Rekor - Rekrut Organisasi**
+> **Rekor - Website Open Recruitment BEM UPNVJ**
 
 Mahasiswa melakukan audit keamanan sederhana terhadap aplikasi Rekor, kemudian merancang dan mengimplementasikan mekanisme keamanan pada layer 5, 6, dan 7 OSI.
+
+Rekor bukan marketplace organisasi dan bukan portal banyak organisasi. Rekor adalah sistem open recruitment untuk satu organisasi dan satu periode rekrutmen, yaitu BEM UPNVJ.
+
+Pendaftar tidak memilih organisasi. Pendaftar memilih bidang/kementerian/biro yang tersedia dalam proses open recruitment.
 
 ## 3. Goals
 
 Tujuan utama aplikasi Rekor:
 
-1. Menyediakan sistem rekrutmen organisasi berbasis web.
-2. Memudahkan pendaftar untuk register, login, mengisi form, dan melihat status seleksi.
+1. Menyediakan website Open Recruitment BEM UPNVJ.
+2. Memudahkan pendaftar untuk register, login, mengisi form, memilih bidang/kementerian/biro, dan melihat status seleksi.
 3. Memudahkan reviewer untuk melihat dan menilai pendaftar.
-4. Memudahkan admin untuk mengelola pendaftar dan status seleksi.
+4. Memudahkan admin untuk mengelola data pendaftar dan status seleksi.
 5. Memudahkan super admin untuk mengelola user, role, dan activity log.
 6. Mengimplementasikan keamanan aplikasi web sesuai kebutuhan tugas Keamanan Jaringan.
 
@@ -44,33 +50,79 @@ Tujuan utama aplikasi Rekor:
 
 Hal-hal yang tidak menjadi prioritas pada versi awal:
 
-1. Sistem email notification.
-2. Upload file asli ke cloud storage.
-3. Integrasi OAuth seperti Google Login.
-4. Payment atau sistem pembayaran.
-5. Multi organisasi.
-6. Chat realtime.
-7. Fitur interview scheduling kompleks.
-8. Dashboard analytics lanjutan.
+1. Multi-organisasi.
+2. Marketplace open recruitment.
+3. List banyak organisasi.
+4. Banyak periode recruitment sekaligus.
+5. Sistem email notification.
+6. Upload file asli ke cloud storage.
+7. Integrasi OAuth seperti Google Login.
+8. Payment atau sistem pembayaran.
+9. Chat realtime.
+10. Interview scheduling kompleks.
+11. Dashboard analytics lanjutan.
 
 Untuk MVP, CV dan portofolio cukup menggunakan input URL.
 
-## 5. Target Users
+## 5. Main Concept
 
-### 5.1 Applicant
+Flow utama aplikasi:
 
-Pendaftar organisasi.
+```txt
+User membuka website Rekor
+↓
+User melihat informasi Open Recruitment BEM UPNVJ
+↓
+User register atau login
+↓
+User mengisi form pendaftaran
+↓
+User memilih bidang/kementerian/biro
+↓
+User submit pendaftaran
+↓
+Reviewer memberikan nilai dan catatan
+↓
+Admin menentukan status diterima atau ditolak
+```
+
+## 6. Terminology
+
+Gunakan istilah berikut secara konsisten:
+
+| Istilah Teknis | Istilah UI              |
+| -------------- | ----------------------- |
+| Application    | Pendaftaran             |
+| Applicant      | Pendaftar               |
+| Division       | Bidang/Kementerian/Biro |
+| Review         | Penilaian               |
+| Status         | Status Seleksi          |
+
+Catatan:
+
+* Di database, field boleh tetap menggunakan nama `division`.
+* Di UI, tampilkan sebagai `Bidang/Kementerian/Biro`.
+* Jangan membuat model `Organization` untuk MVP.
+* Jangan membuat route list organisasi.
+* Jangan membuat route detail organisasi.
+
+## 7. Target Users
+
+### 7.1 Applicant
+
+Pendaftar Open Recruitment BEM UPNVJ.
 
 Kebutuhan:
 
 * Membuat akun.
 * Login.
 * Mengisi form pendaftaran.
+* Memilih bidang/kementerian/biro.
 * Menyimpan draft pendaftaran.
 * Submit pendaftaran.
 * Melihat status seleksi.
 
-### 5.2 Reviewer
+### 7.2 Reviewer
 
 Penilai pendaftar.
 
@@ -82,7 +134,7 @@ Kebutuhan:
 * Memberikan nilai dan catatan.
 * Submit hasil review.
 
-### 5.3 Admin
+### 7.3 Admin
 
 Pengelola rekrutmen.
 
@@ -90,11 +142,11 @@ Kebutuhan:
 
 * Login.
 * Melihat semua data pendaftar.
-* Filter pendaftar berdasarkan status atau divisi.
+* Filter pendaftar berdasarkan status atau bidang/kementerian/biro.
 * Mengubah status pendaftar.
 * Melihat hasil review dari reviewer.
 
-### 5.4 Super Admin
+### 7.4 Super Admin
 
 Pengelola tertinggi sistem.
 
@@ -106,31 +158,27 @@ Kebutuhan:
 * Melihat activity log.
 * Mengelola akses sistem.
 
-## 6. User Roles
-
-Role yang digunakan dalam aplikasi:
+## 8. User Roles
 
 | Role          | Deskripsi                                    |
 | ------------- | -------------------------------------------- |
-| `APPLICANT`   | Pendaftar organisasi.                        |
+| `APPLICANT`   | Pendaftar Open Recruitment BEM UPNVJ.        |
 | `REVIEWER`    | Penilai pendaftar.                           |
 | `ADMIN`       | Pengelola data pendaftar dan status seleksi. |
 | `SUPER_ADMIN` | Pengelola user, role, dan activity log.      |
 
-## 7. Role Based Access Control
+## 9. Role Based Access Control
 
-### 7.1 Public Access
+### 9.1 Public Access
 
-Halaman yang dapat diakses tanpa login:
+| Route           | Deskripsi                               |
+| --------------- | --------------------------------------- |
+| `/`             | Landing page Open Recruitment BEM UPNVJ |
+| `/login`        | Login                                   |
+| `/register`     | Register                                |
+| `/unauthorized` | Halaman akses ditolak                   |
 
-| Route           | Deskripsi             |
-| --------------- | --------------------- |
-| `/`             | Landing page          |
-| `/login`        | Login                 |
-| `/register`     | Register              |
-| `/unauthorized` | Halaman akses ditolak |
-
-### 7.2 Applicant Access
+### 9.2 Applicant Access
 
 Role: `APPLICANT`
 
@@ -142,7 +190,7 @@ Role: `APPLICANT`
 | `/reviewer/*`     | Tidak boleh |
 | `/admin/*`        | Tidak boleh |
 
-### 7.3 Reviewer Access
+### 9.3 Reviewer Access
 
 Role: `REVIEWER`
 
@@ -154,7 +202,7 @@ Role: `REVIEWER`
 | `/admin/*`                    | Tidak boleh |
 | `/apply`                      | Tidak boleh |
 
-### 7.4 Admin Access
+### 9.4 Admin Access
 
 Role: `ADMIN`
 
@@ -163,11 +211,11 @@ Role: `ADMIN`
 | `/dashboard`               | Bisa akses                 |
 | `/admin/applications`      | Bisa akses                 |
 | `/admin/applications/[id]` | Bisa akses                 |
-| `/admin/users`             | Tidak boleh                |
 | `/reviewer/applications`   | Bisa akses jika dibutuhkan |
+| `/admin/users`             | Tidak boleh                |
 | `/apply`                   | Tidak boleh                |
 
-### 7.5 Super Admin Access
+### 9.5 Super Admin Access
 
 Role: `SUPER_ADMIN`
 
@@ -175,9 +223,33 @@ Role: `SUPER_ADMIN`
 | --------------------- | ---------- |
 | Semua route protected | Bisa akses |
 
-## 8. Main Features
+## 10. Data Bidang/Kementerian/Biro
 
-## 8.1 Landing Page
+Data bidang pada aplikasi ini digunakan sebagai **data simulasi untuk kebutuhan UAS**. Nama bidang dapat disesuaikan kembali jika tim memiliki struktur resmi terbaru dari BEM UPNVJ.
+
+Gunakan data sementara berikut:
+
+```txt
+- Biro Kesekretariatan
+- Biro Keuangan dan Pendanaan
+- Biro Media dan Informasi
+- Kementerian Advokasi dan Kesejahteraan Mahasiswa
+- Kementerian Sosial Politik
+- Kementerian Ekonomi Kreatif
+- Departemen Kajian Strategis
+- Departemen Kemitraan Strategis
+```
+
+Penting:
+
+* Jangan klaim daftar ini sebagai struktur resmi terbaru jika belum diverifikasi.
+* Jangan membuat fitur multi-organisasi.
+* Jangan membuat model `Organization`.
+* Tetap gunakan field `division` untuk menyimpan pilihan bidang.
+
+## 11. Main Features
+
+### 11.1 Landing Page
 
 Route:
 
@@ -185,26 +257,52 @@ Route:
 /
 ```
 
+Tujuan:
+
+Landing page harus terasa seperti website Open Recruitment BEM UPNVJ, bukan website penyedia platform oprec umum.
+
 Isi halaman:
 
-* Nama aplikasi: Rekor.
-* Kepanjangan: Rekrut Organisasi.
-* Deskripsi singkat aplikasi.
-* CTA ke login dan register.
-* Highlight keamanan:
+* Navbar.
+* Hero Open Recruitment BEM UPNVJ.
+* CTA ke register dan login.
+* Informasi singkat tentang Rekor.
+* Section bidang/kementerian/biro yang dibuka.
+* Alur pendaftaran.
+* CTA akhir untuk daftar.
+* Footer.
 
-  * Secure login.
-  * Role based access.
-  * Protected data.
-  * Activity log.
+Copywriting utama:
+
+```txt
+Open Recruitment BEM UPNVJ
+
+Saatnya jadi bagian dari BEM UPN "Veteran" Jakarta. Pilih bidang yang sesuai dengan minatmu, lengkapi formulir pendaftaran, dan pantau status seleksimu melalui Rekor.
+```
+
+Landing page tidak boleh terlalu banyak menjelaskan keamanan.
+
+Jangan menampilkan:
+
+* ISO 27001 di landing page.
+* OSI layer di landing page.
+* Password hashing di landing page.
+* Session management di landing page.
+* Copywriting seperti SaaS komersial.
+* Kalimat seperti "bergabung dengan banyak organisasi lainnya".
+* Marketplace organisasi.
+* List banyak organisasi.
 
 Acceptance criteria:
 
-* User dapat melihat informasi aplikasi.
+* User dapat melihat informasi Open Recruitment BEM UPNVJ.
+* User dapat melihat pilihan bidang/kementerian/biro.
 * User dapat menuju halaman login.
 * User dapat menuju halaman register.
+* Landing page tidak terlalu banyak teks.
+* Landing page tidak terlihat seperti platform komersial untuk banyak organisasi.
 
-## 8.2 Register
+### 11.2 Register
 
 Route:
 
@@ -235,7 +333,7 @@ Acceptance criteria:
 * Password tersimpan sebagai hash.
 * Role default adalah `APPLICANT`.
 
-## 8.3 Login
+### 11.3 Login
 
 Route:
 
@@ -262,9 +360,9 @@ Acceptance criteria:
 * User dapat login dengan credential valid.
 * User tidak dapat login dengan credential salah.
 * Session cookie dibuat setelah login berhasil.
-* User diarahkan ke dashboard sesuai role.
+* User diarahkan ke dashboard.
 
-## 8.4 Logout
+### 11.4 Logout
 
 Endpoint:
 
@@ -283,7 +381,7 @@ Acceptance criteria:
 * Session tidak bisa digunakan lagi setelah logout.
 * User tidak bisa mengakses halaman protected setelah logout.
 
-## 8.5 Dashboard
+### 11.5 Dashboard
 
 Route:
 
@@ -325,7 +423,7 @@ Acceptance criteria:
 * Dashboard hanya dapat diakses user login.
 * Konten dashboard sesuai role user.
 
-## 8.6 Application Form
+### 11.6 Application Form
 
 Route:
 
@@ -345,7 +443,7 @@ Field:
 * Phone
 * Major
 * Batch
-* Division
+* Division atau Bidang/Kementerian/Biro
 * Motivation
 * CV URL
 * Portfolio URL
@@ -372,10 +470,11 @@ Acceptance criteria:
 
 * Applicant bisa menyimpan draft.
 * Applicant bisa submit application.
+* Applicant dapat memilih bidang/kementerian/biro.
 * Applicant tidak bisa mengakses application milik user lain.
 * Applicant tidak bisa mengubah status secara ilegal dari frontend atau API.
 
-## 8.7 My Application
+### 11.7 My Application
 
 Route:
 
@@ -395,7 +494,7 @@ Isi halaman:
 * Status application.
 * Catatan hasil review jika ada.
 * Tanggal submit.
-* Divisi yang dipilih.
+* Bidang/kementerian/biro yang dipilih.
 
 Acceptance criteria:
 
@@ -403,7 +502,7 @@ Acceptance criteria:
 * Jika belum punya application, tampilkan empty state.
 * Status tampil jelas.
 
-## 8.8 Reviewer Applications
+### 11.8 Reviewer Applications
 
 Route:
 
@@ -423,7 +522,7 @@ Isi halaman:
 
 * List application yang sudah `SUBMITTED` atau `UNDER_REVIEW`.
 * Search applicant.
-* Filter division.
+* Filter bidang/kementerian/biro.
 * Filter status.
 * Tombol detail/review.
 
@@ -433,7 +532,7 @@ Acceptance criteria:
 * Reviewer tidak dapat mengubah status final.
 * Reviewer dapat masuk ke detail application.
 
-## 8.9 Reviewer Application Detail
+### 11.9 Reviewer Application Detail
 
 Route:
 
@@ -455,6 +554,7 @@ Isi halaman:
 * Motivation.
 * CV URL.
 * Portfolio URL.
+* Bidang/kementerian/biro yang dipilih.
 * Input score.
 * Input note.
 * Submit review.
@@ -473,7 +573,7 @@ Acceptance criteria:
 * Activity log tercatat.
 * Applicant dapat melihat catatan jika dibutuhkan.
 
-## 8.10 Admin Applications
+### 11.10 Admin Applications
 
 Route:
 
@@ -497,7 +597,7 @@ Isi halaman:
 * Total rejected.
 * Tabel semua application.
 * Filter status.
-* Filter division.
+* Filter bidang/kementerian/biro.
 * Action update status.
 
 Rules:
@@ -517,7 +617,7 @@ Acceptance criteria:
 * Applicant dapat melihat status terbaru.
 * Perubahan status tercatat di activity log.
 
-## 8.11 User Management
+### 11.11 User Management
 
 Route:
 
@@ -558,7 +658,7 @@ Acceptance criteria:
 * User non-super-admin tidak dapat mengakses halaman ini.
 * API tetap memvalidasi role di server.
 
-## 8.12 Activity Log
+### 11.12 Activity Log
 
 Route:
 
@@ -599,9 +699,9 @@ Acceptance criteria:
 * Super admin dapat melihat log.
 * User biasa tidak dapat melihat log.
 
-## 9. Security Requirements
+## 12. Security Requirements
 
-## 9.1 Password Hashing
+### 12.1 Password Hashing
 
 Rules:
 
@@ -617,7 +717,7 @@ bcrypt.hash(password, 12)
 bcrypt.compare(password, user.passwordHash)
 ```
 
-## 9.2 Session Management
+### 12.2 Session Management
 
 Rules:
 
@@ -639,7 +739,7 @@ Dilarang:
 * Menyimpan password di cookie.
 * Menyimpan role sebagai sumber validasi utama di client.
 
-## 9.3 RBAC
+### 12.3 RBAC
 
 Rules:
 
@@ -648,14 +748,14 @@ Rules:
 * API admin harus memanggil helper seperti `requireRole`.
 * Applicant hanya boleh mengakses data miliknya sendiri.
 
-## 9.4 Protected Route
+### 12.4 Protected Route
 
 Rules:
 
 * Halaman protected harus redirect ke `/login` jika user belum login.
 * Jika user login tetapi tidak punya role yang sesuai, redirect ke `/unauthorized`.
 
-## 9.5 HTTPS/TLS
+### 12.5 HTTPS/TLS
 
 Rules:
 
@@ -663,7 +763,7 @@ Rules:
 * Cookie production harus menggunakan `secure: true`.
 * Deployment di Vercel atau platform lain yang menyediakan HTTPS otomatis diperbolehkan.
 
-## 9.6 Input Validation
+### 12.6 Input Validation
 
 Rules:
 
@@ -678,7 +778,7 @@ Recommended:
 
 * Gunakan Zod untuk validasi schema request.
 
-## 9.7 Error Handling
+### 12.7 Error Handling
 
 Rules:
 
@@ -691,7 +791,7 @@ Invalid email or password
 
 * Jangan beri tahu apakah email terdaftar atau password salah pada proses login.
 
-## 10. OSI Layer Mapping
+## 13. OSI Layer Mapping
 
 | Layer                  | Implementasi                                                         |
 | ---------------------- | -------------------------------------------------------------------- |
@@ -699,7 +799,7 @@ Invalid email or password
 | Layer 6 - Presentation | Password hashing, HTTPS/TLS, perlindungan data saat transmisi        |
 | Layer 7 - Application  | Login, logout, RBAC, protected route, input validation, activity log |
 
-## 11. ISO 27001 Control Mapping
+## 14. ISO 27001 Control Mapping
 
 | Area Kontrol           | Implementasi di Rekor                                     |
 | ---------------------- | --------------------------------------------------------- |
@@ -710,9 +810,9 @@ Invalid email or password
 | Secure Development     | Validasi input, error handling, server-side authorization |
 | User Access Management | Role management oleh super admin                          |
 
-## 12. Tech Stack
+## 15. Tech Stack
 
-## 12.1 Core Stack
+### 15.1 Core Stack
 
 * **Next.js** sebagai framework utama.
 * **TypeScript** untuk type safety.
@@ -722,7 +822,7 @@ Invalid email or password
 * **bcryptjs** untuk password hashing.
 * **Cookie session** untuk session management.
 
-## 12.2 Development Tools
+### 15.2 Development Tools
 
 * **npm** atau **Bun** untuk package manager.
 * **Git** untuk version control.
@@ -731,7 +831,7 @@ Invalid email or password
 * **ESLint** untuk linting.
 * **VS Code** sebagai code editor.
 
-## 13. Database Schema
+## 16. Database Schema
 
 Gunakan schema utama berikut:
 
@@ -784,6 +884,11 @@ Fields:
 * `createdAt`
 * `updatedAt`
 
+Catatan:
+
+* Field `division` digunakan untuk menyimpan pilihan bidang/kementerian/biro.
+* UI harus menampilkan label `Bidang/Kementerian/Biro`.
+
 ### Review
 
 Menyimpan hasil review.
@@ -812,7 +917,7 @@ Fields:
 * `userAgent`
 * `createdAt`
 
-## 14. Suggested Folder Structure
+## 17. Suggested Folder Structure
 
 ```txt
 rekor-web/
@@ -868,11 +973,11 @@ rekor-web/
 └── PRD.md
 ```
 
-## 15. API Requirements
+## 18. API Requirements
 
-## 15.1 Auth API
+### 18.1 Auth API
 
-### Register
+#### Register
 
 ```txt
 POST /api/auth/register
@@ -888,21 +993,7 @@ Request body:
 }
 ```
 
-Response success:
-
-```json
-{
-  "message": "Register success",
-  "data": {
-    "id": "user_id",
-    "name": "Khaliz Kanigara",
-    "email": "khaliz@example.com",
-    "role": "APPLICANT"
-  }
-}
-```
-
-### Login
+#### Login
 
 ```txt
 POST /api/auth/login
@@ -917,57 +1008,21 @@ Request body:
 }
 ```
 
-Response success:
-
-```json
-{
-  "message": "Login success",
-  "data": {
-    "id": "user_id",
-    "name": "Khaliz Kanigara",
-    "email": "khaliz@example.com",
-    "role": "APPLICANT"
-  }
-}
-```
-
-### Me
+#### Me
 
 ```txt
 GET /api/auth/me
 ```
 
-Response success:
-
-```json
-{
-  "message": "Authenticated",
-  "data": {
-    "id": "user_id",
-    "name": "Khaliz Kanigara",
-    "email": "khaliz@example.com",
-    "role": "APPLICANT"
-  }
-}
-```
-
-### Logout
+#### Logout
 
 ```txt
 POST /api/auth/logout
 ```
 
-Response success:
+### 18.2 Application API
 
-```json
-{
-  "message": "Logout success"
-}
-```
-
-## 15.2 Application API
-
-### Create or Update Draft
+#### Create or Update Draft
 
 ```txt
 POST /api/applications
@@ -987,14 +1042,14 @@ Request body:
   "phone": "08123456789",
   "major": "Sistem Informasi",
   "batch": "2024",
-  "division": "Product & Tech",
-  "motivation": "Saya ingin bergabung untuk mengembangkan kemampuan dan berkontribusi dalam organisasi.",
+  "division": "Biro Media dan Informasi",
+  "motivation": "Saya ingin bergabung untuk mengembangkan kemampuan dan berkontribusi dalam BEM UPNVJ.",
   "cvUrl": "https://example.com/cv.pdf",
   "portfolioUrl": "https://example.com/portfolio"
 }
 ```
 
-### Submit Application
+#### Submit Application
 
 ```txt
 PATCH /api/applications/submit
@@ -1011,7 +1066,7 @@ Rules:
 * Mengubah status dari `DRAFT` menjadi `SUBMITTED`.
 * Hanya untuk application milik user login.
 
-### Get My Application
+#### Get My Application
 
 ```txt
 GET /api/applications/me
@@ -1027,9 +1082,9 @@ Rules:
 
 * Hanya return application milik user login.
 
-## 15.3 Reviewer API
+### 18.3 Reviewer API
 
-### Get Reviewable Applications
+#### Get Reviewable Applications
 
 ```txt
 GET /api/reviewer/applications
@@ -1043,7 +1098,21 @@ ADMIN
 SUPER_ADMIN
 ```
 
-### Review Application
+#### Get Reviewable Application Detail
+
+```txt
+GET /api/reviewer/applications/[id]
+```
+
+Role:
+
+```txt
+REVIEWER
+ADMIN
+SUPER_ADMIN
+```
+
+#### Review Application
 
 ```txt
 POST /api/reviewer/applications/[id]/review
@@ -1071,9 +1140,9 @@ Rules:
 * Score 0 sampai 100.
 * Setelah review, status application menjadi `UNDER_REVIEW`.
 
-## 15.4 Admin API
+### 18.4 Admin API
 
-### Get All Applications
+#### Get All Applications
 
 ```txt
 GET /api/admin/applications
@@ -1086,7 +1155,20 @@ ADMIN
 SUPER_ADMIN
 ```
 
-### Update Application Status
+#### Get Application Detail
+
+```txt
+GET /api/admin/applications/[id]
+```
+
+Role:
+
+```txt
+ADMIN
+SUPER_ADMIN
+```
+
+#### Update Application Status
 
 ```txt
 PATCH /api/admin/applications/[id]/status
@@ -1113,7 +1195,7 @@ Allowed status:
 * `ACCEPTED`
 * `REJECTED`
 
-### Get Users
+#### Get Users
 
 ```txt
 GET /api/admin/users
@@ -1125,7 +1207,7 @@ Role:
 SUPER_ADMIN
 ```
 
-### Update User Role
+#### Update User Role
 
 ```txt
 PATCH /api/admin/users/[id]/role
@@ -1145,27 +1227,72 @@ Request body:
 }
 ```
 
-## 16. UI Guidelines
+#### Get Activity Logs
 
-## 16.1 Visual Style
+```txt
+GET /api/admin/activity-logs
+```
+
+Role:
+
+```txt
+SUPER_ADMIN
+```
+
+## 19. UI Guidelines
+
+### 19.1 Visual Style
 
 Style aplikasi:
 
 * Clean dashboard.
-* Modern SaaS style.
+* Modern web app.
 * Simple dan rapi.
 * Responsive untuk desktop dan mobile.
+* Tidak terlalu banyak gradient.
+* Tidak menggunakan visual cybersecurity berlebihan.
+* Tidak terlihat seperti template AI.
 
 Warna rekomendasi:
 
-* Primary: blue atau navy.
-* Background: white atau light gray.
-* Success: green.
-* Warning: yellow/orange.
-* Danger: red.
-* Text: dark gray.
+* Background: `#F8FAFC`
+* Surface: `#FFFFFF`
+* Surface Muted: `#F1F5F9`
+* Border: `#E2E8F0`
+* Text Primary: `#0F172A`
+* Text Secondary: `#475569`
+* Text Muted: `#64748B`
+* Primary: `#1E40AF`
+* Primary Hover: `#1D4ED8`
+* Primary Soft: `#DBEAFE`
+* Success: `#16A34A`
+* Success Soft: `#DCFCE7`
+* Warning: `#D97706`
+* Warning Soft: `#FEF3C7`
+* Danger: `#DC2626`
+* Danger Soft: `#FEE2E2`
 
-## 16.2 Component Guidelines
+### 19.2 Landing Page Direction
+
+Landing page harus terlihat seperti website Open Recruitment BEM UPNVJ.
+
+Landing page harus fokus pada:
+
+* Ajakan mendaftar.
+* Informasi open recruitment.
+* Bidang/kementerian/biro yang dibuka.
+* Alur pendaftaran.
+* CTA daftar.
+
+Landing page tidak boleh terlihat seperti:
+
+* Platform SaaS komersial.
+* Marketplace organisasi.
+* Website penyedia sistem oprec untuk banyak organisasi.
+* Website keamanan jaringan.
+* Halaman laporan akademik.
+
+### 19.3 Component Guidelines
 
 Gunakan komponen reusable untuk:
 
@@ -1174,7 +1301,8 @@ Gunakan komponen reusable untuk:
 * Textarea.
 * Select.
 * Card.
-* Badge status.
+* Badge.
+* StatusBadge.
 * Table.
 * Modal.
 * Sidebar.
@@ -1182,59 +1310,71 @@ Gunakan komponen reusable untuk:
 * Empty state.
 * Loading state.
 
-## 16.3 Status Badge
+### 19.4 Status Badge
 
-Gunakan badge untuk status:
+| Status         | Label UI | Warna  |
+| -------------- | -------- | ------ |
+| `DRAFT`        | Draft    | Gray   |
+| `SUBMITTED`    | Terkirim | Blue   |
+| `UNDER_REVIEW` | Direview | Yellow |
+| `ACCEPTED`     | Diterima | Green  |
+| `REJECTED`     | Ditolak  | Red    |
 
-| Status         | Warna  |
-| -------------- | ------ |
-| `DRAFT`        | Gray   |
-| `SUBMITTED`    | Blue   |
-| `UNDER_REVIEW` | Yellow |
-| `ACCEPTED`     | Green  |
-| `REJECTED`     | Red    |
-
-## 17. AI Agent Instructions
+## 20. AI Agent Instructions
 
 Instruksi penting untuk AI agent atau developer yang mengerjakan project:
 
 1. Jangan mengubah nama project. Nama project adalah **Rekor**.
-2. Jangan mengubah konsep utama. Rekor adalah aplikasi **Rekrut Organisasi**.
-3. Jangan mengganti stack utama tanpa alasan kuat.
-4. Gunakan **Next.js App Router**.
-5. Gunakan **TypeScript**.
-6. Gunakan **Prisma** untuk database.
-7. Gunakan **PostgreSQL** sebagai database.
-8. Gunakan **bcryptjs** untuk password hashing.
-9. Gunakan **database session + httpOnly cookie** untuk session management.
-10. Jangan gunakan localStorage untuk menyimpan token auth.
-11. Jangan gunakan JWT kecuali diminta secara eksplisit.
-12. Jangan membuat backend repository terpisah.
-13. API dibuat di dalam `src/app/api`.
-14. Validasi role wajib dilakukan di server.
-15. Jangan hanya mengandalkan validasi role di frontend.
-16. Jangan return `passwordHash` ke client.
-17. Jangan menampilkan detail error database ke client.
-18. Semua fitur admin harus divalidasi dengan `requireRole`.
-19. Applicant hanya boleh mengakses application miliknya sendiri.
-20. Semua aktivitas penting harus masuk ke activity log.
-21. Fitur file upload asli tidak wajib untuk MVP. Gunakan `cvUrl` dan `portfolioUrl`.
-22. Prioritaskan MVP yang aman dan jalan dibanding fitur banyak tapi tidak selesai.
-23. Jaga konsistensi naming route, schema, dan role.
-24. Jangan membuat fitur di luar scope PRD tanpa konfirmasi.
-25. Jika ragu, ikuti dokumen PRD ini sebagai sumber utama.
+2. Rekor adalah website **Open Recruitment BEM UPNVJ**.
+3. Rekor bukan platform umum untuk banyak organisasi.
+4. Rekor bukan marketplace open recruitment.
+5. Jangan membuat halaman list organisasi.
+6. Jangan membuat halaman detail organisasi.
+7. Jangan membuat model `Organization` untuk MVP.
+8. Gunakan konsep satu periode open recruitment.
+9. Gunakan istilah UI `Bidang/Kementerian/Biro`.
+10. Field database `division` tetap boleh digunakan.
+11. Data bidang bersifat simulasi dan bisa diganti jika struktur resmi tersedia.
+12. Jangan klaim data bidang sebagai struktur resmi terbaru jika belum diverifikasi.
+13. Landing page harus fokus mengajak pendaftar mengikuti Open Recruitment BEM UPNVJ.
+14. Jangan membuat landing page seperti produk SaaS penyedia sistem rekrutmen.
+15. Jangan terlalu banyak menampilkan copy keamanan di UI.
+16. Keamanan tetap wajib diimplementasikan di backend dan protected route.
+17. Gunakan **Next.js App Router**.
+18. Gunakan **TypeScript**.
+19. Gunakan **Prisma** untuk database.
+20. Gunakan **PostgreSQL** sebagai database.
+21. Gunakan **bcryptjs** untuk password hashing.
+22. Gunakan **database session + httpOnly cookie** untuk session management.
+23. Jangan gunakan localStorage untuk menyimpan token auth.
+24. Jangan gunakan JWT kecuali diminta secara eksplisit.
+25. Jangan membuat backend repository terpisah.
+26. API dibuat di dalam `src/app/api`.
+27. Validasi role wajib dilakukan di server.
+28. Jangan hanya mengandalkan validasi role di frontend.
+29. Jangan return `passwordHash` ke client.
+30. Jangan menampilkan detail error database ke client.
+31. Semua fitur admin harus divalidasi dengan `requireRole`.
+32. Applicant hanya boleh mengakses application miliknya sendiri.
+33. Semua aktivitas penting harus masuk ke activity log.
+34. Fitur file upload asli tidak wajib untuk MVP. Gunakan `cvUrl` dan `portfolioUrl`.
+35. Prioritaskan MVP yang aman dan jalan dibanding fitur banyak tapi tidak selesai.
+36. Jaga konsistensi naming route, schema, dan role.
+37. Jangan membuat fitur di luar scope PRD tanpa konfirmasi.
+38. Jika ragu, ikuti dokumen PRD ini sebagai sumber utama.
 
-## 18. MVP Scope
+## 21. MVP Scope
 
 Fitur yang wajib selesai untuk MVP:
 
-* Landing page.
+* Landing page Open Recruitment BEM UPNVJ.
 * Register.
 * Login.
 * Logout.
 * Session management.
 * Dashboard berdasarkan role.
 * Applicant application form.
+* Pilihan bidang/kementerian/biro.
 * My application page.
 * Reviewer applications page.
 * Review application.
@@ -1246,9 +1386,7 @@ Fitur yang wajib selesai untuk MVP:
 * RBAC.
 * Basic security testing.
 
-## 19. Security Testing Checklist
-
-Checklist pengujian:
+## 22. Security Testing Checklist
 
 | Test Case                                     | Expected Result                               |
 | --------------------------------------------- | --------------------------------------------- |
@@ -1266,8 +1404,9 @@ Checklist pengujian:
 | Cookie session                                | Menggunakan httpOnly                          |
 | Activity log setelah login                    | Tercatat                                      |
 | Activity log setelah update status            | Tercatat                                      |
+| Applicant mengakses data applicant lain       | Ditolak                                       |
 
-## 20. Success Criteria
+## 23. Success Criteria
 
 Project dianggap berhasil jika:
 
@@ -1277,14 +1416,15 @@ Project dianggap berhasil jika:
 4. User tidak login tidak bisa mengakses route protected.
 5. Role yang tidak sesuai tidak bisa mengakses halaman/API tertentu.
 6. Applicant bisa mengisi dan submit pendaftaran.
-7. Reviewer bisa memberikan review.
-8. Admin bisa update status pendaftar.
-9. Super admin bisa mengubah role user.
-10. Activity log mencatat aktivitas penting.
-11. Aplikasi bisa dijelaskan dalam laporan sebagai implementasi keamanan layer 5, 6, dan 7.
-12. Aplikasi dapat diuji menggunakan checklist security testing sederhana.
+7. Applicant bisa memilih bidang/kementerian/biro.
+8. Reviewer bisa memberikan review.
+9. Admin bisa update status pendaftar.
+10. Super admin bisa mengubah role user.
+11. Activity log mencatat aktivitas penting.
+12. Aplikasi bisa dijelaskan dalam laporan sebagai implementasi keamanan layer 5, 6, dan 7.
+13. Aplikasi dapat diuji menggunakan checklist security testing sederhana.
 
-## 21. Team Members
+## 24. Team Members
 
 | Nama                           | NIM        |
 | ------------------------------ | ---------- |
@@ -1294,7 +1434,7 @@ Project dianggap berhasil jika:
 | Muhammad Adla Fayyaz Fauzy     | 2410512154 |
 | Muhammad Syauqi Rabbani        | 2410512166 |
 
-## 22. Notes
+## 25. Notes
 
 Project ini dibuat untuk kebutuhan akademik, yaitu UAS Mata Kuliah Keamanan Jaringan.
 
@@ -1304,3 +1444,4 @@ Prioritas utama project adalah:
 2. Implementasi keamanan dapat dibuktikan.
 3. Struktur code mudah dipahami.
 4. Laporan dapat menjelaskan hubungan antara fitur aplikasi dan aspek keamanan jaringan.
+5. UI tetap terasa seperti website Open Recruitment BEM UPNVJ, bukan website laporan keamanan.
