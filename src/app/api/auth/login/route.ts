@@ -9,28 +9,20 @@ import {
   setSessionCookie,
 } from "@/lib/session";
 
-type LoginBody = {
-  email?: unknown;
-  password?: unknown;
-};
+import { loginSchema } from "@/lib/validations";
 
 const invalidCredentialResponse = () =>
   NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
 
 export async function POST(request: NextRequest) {
-  const body = (await request.json().catch(() => null)) as LoginBody | null;
+  const json = await request.json().catch(() => null);
+  const parsed = loginSchema.safeParse(json);
 
-  if (!body) {
+  if (!parsed.success) {
     return invalidCredentialResponse();
   }
 
-  const email =
-    typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-  const password = typeof body.password === "string" ? body.password : "";
-
-  if (!email || !password) {
-    return invalidCredentialResponse();
-  }
+  const { email, password } = parsed.data;
 
   const user = await prisma.user.findUnique({
     where: { email },

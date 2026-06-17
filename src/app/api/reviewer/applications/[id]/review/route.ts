@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole, authErrorResponse } from "@/lib/auth";
+import { reviewSchema } from "@/lib/validations";
 
 export async function POST(
   request: NextRequest,
@@ -10,20 +11,17 @@ export async function POST(
     const user = await requireRole(["REVIEWER", "ADMIN", "SUPER_ADMIN"], request);
     const resolvedParams = await params;
 
-    const body = await request.json();
-    const { score, note } = body;
+    const json = await request.json().catch(() => null);
+    const parsed = reviewSchema.safeParse(json);
 
-    if (
-      score === undefined ||
-      typeof score !== "number" ||
-      score < 0 ||
-      score > 100
-    ) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { message: "Score must be a number between 0 and 100" },
+        { message: parsed.error.issues[0].message },
         { status: 400 }
       );
     }
+
+    const { score, note } = parsed.data;
 
     const application = await prisma.application.findUnique({
       where: { id: resolvedParams.id },

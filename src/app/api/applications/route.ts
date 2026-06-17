@@ -2,19 +2,20 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole, authErrorResponse } from "@/lib/auth";
 
-function isValidUrl(string: string) {
-  try {
-    new URL(string);
-    return true;
-  } catch {
-    return false;
-  }
-}
+import { applicationSchema } from "@/lib/validations";
 
 export async function POST(request: NextRequest) {
   try {
     const user = await requireRole(["APPLICANT"], request);
-    const body = await request.json();
+    const json = await request.json().catch(() => null);
+    const parsed = applicationSchema.safeParse(json);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { message: parsed.error.issues[0].message },
+        { status: 400 }
+      );
+    }
 
     const {
       fullName,
@@ -25,25 +26,7 @@ export async function POST(request: NextRequest) {
       motivation,
       cvUrl,
       portfolioUrl,
-    } = body;
-
-    if (!fullName || !phone || !major || !batch || !division || !motivation) {
-      return NextResponse.json(
-        { message: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    if (cvUrl && !isValidUrl(cvUrl)) {
-      return NextResponse.json({ message: "Invalid CV URL" }, { status: 400 });
-    }
-
-    if (portfolioUrl && !isValidUrl(portfolioUrl)) {
-      return NextResponse.json(
-        { message: "Invalid Portfolio URL" },
-        { status: 400 }
-      );
-    }
+    } = parsed.data;
 
     const existingApplication = await prisma.application.findFirst({
       where: { applicantId: user.id },
