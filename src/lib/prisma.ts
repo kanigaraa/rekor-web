@@ -13,7 +13,14 @@ function createPrismaClient() {
     throw new Error("DATABASE_URL is required");
   }
 
-  const adapter = new PrismaPg({ connectionString });
+  // Enable SSL for Supabase connections (pooler or direct)
+  const isSupabase = connectionString.includes("supabase.com") || connectionString.includes("supabase.co");
+  const adapter = new PrismaPg({
+    connectionString,
+    ...(isSupabase && {
+      ssl: { rejectUnauthorized: false },
+    }),
+  });
 
   return new PrismaClient({ adapter });
 }
