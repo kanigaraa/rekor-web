@@ -38,8 +38,16 @@ export default function LoginPage() {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Login failed");
+        let errorMessage = "Login failed";
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await res.json();
+          errorMessage = data.message || errorMessage;
+        } else {
+          const text = await res.text();
+          errorMessage = text ? `Error ${res.status}: ${text.slice(0, 50)}...` : `Error ${res.status}: ${res.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
       router.push("/dashboard");
