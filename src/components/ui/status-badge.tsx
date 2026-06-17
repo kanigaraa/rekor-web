@@ -24,19 +24,19 @@ const statusConfig: Record<
     variant: "secondary",
   },
   SUBMITTED: {
-    label: "Submitted",
+    label: "Terkirim",
     variant: "info",
   },
   UNDER_REVIEW: {
-    label: "Under Review",
+    label: "Direview",
     variant: "warning",
   },
   ACCEPTED: {
-    label: "Accepted",
+    label: "Diterima",
     variant: "success",
   },
   REJECTED: {
-    label: "Rejected",
+    label: "Ditolak",
     variant: "danger",
   },
 };
