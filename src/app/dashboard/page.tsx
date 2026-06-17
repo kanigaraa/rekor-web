@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ClipboardCheck,
@@ -21,10 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-// TODO: Replace this mock role with server-side auth once session handling is ready.
-const mockRole: DashboardRole = "APPLICANT";
-const mockUserName = "Khaliz";
+import { getCurrentUser } from "@/lib/auth";
 
 type DashboardCard = {
   title: string;
@@ -69,13 +67,13 @@ const dashboardContentByRole: Record<DashboardRole, DashboardContent> = {
     cards: [
       {
         title: "Pendaftar Menunggu Review",
-        value: "12",
+        value: "-",
         description: "Perlu ditinjau",
         icon: ClipboardList,
       },
       {
         title: "Sudah Direview",
-        value: "28",
+        value: "-",
         description: "Review tersimpan",
         icon: ListChecks,
       },
@@ -94,31 +92,31 @@ const dashboardContentByRole: Record<DashboardRole, DashboardContent> = {
     cards: [
       {
         title: "Total Pendaftar",
-        value: "124",
+        value: "-",
         description: "Semua pendaftar",
         icon: Users,
       },
       {
         title: "Terkirim",
-        value: "86",
+        value: "-",
         description: "Form masuk",
         icon: Send,
       },
       {
         title: "Direview",
-        value: "31",
+        value: "-",
         description: "Sedang diproses",
         icon: ClipboardList,
       },
       {
         title: "Diterima",
-        value: "18",
+        value: "-",
         description: "Lolos seleksi",
         icon: ClipboardCheck,
       },
       {
         title: "Ditolak",
-        value: "9",
+        value: "-",
         description: "Tidak lolos",
         icon: FileText,
       },
@@ -137,25 +135,25 @@ const dashboardContentByRole: Record<DashboardRole, DashboardContent> = {
     cards: [
       {
         title: "Total User",
-        value: "42",
+        value: "-",
         description: "Akun terdaftar",
         icon: Users,
       },
       {
         title: "Reviewer",
-        value: "6",
+        value: "-",
         description: "User reviewer",
         icon: ClipboardCheck,
       },
       {
         title: "Admin",
-        value: "3",
+        value: "-",
         description: "User admin",
         icon: UserCog,
       },
       {
         title: "Activity Log",
-        value: "157",
+        value: "-",
         description: "Aktivitas tercatat",
         icon: History,
       },
@@ -167,20 +165,29 @@ const dashboardContentByRole: Record<DashboardRole, DashboardContent> = {
   },
 };
 
-export default function DashboardPage() {
-  const dashboardContent = dashboardContentByRole[mockRole];
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  
+  if (!user) {
+    redirect("/login");
+  }
+
+  const role = user.role as DashboardRole;
+  const userName = user.name;
+
+  const dashboardContent = dashboardContentByRole[role];
 
   return (
-    <DashboardShell role={mockRole} userName={mockUserName}>
+    <DashboardShell role={role} userName={userName}>
       <div className="space-y-6 pb-8">
         <section className="rounded-lg border border-border bg-surface p-5 shadow-sm sm:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm font-medium text-primary">
-                {roleLabels[mockRole]}
+                {roleLabels[role]}
               </p>
               <h1 className="mt-2 text-2xl font-semibold tracking-normal text-text-primary sm:text-3xl">
-                Halo, {mockUserName}
+                Halo, {userName}
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-text-secondary sm:text-base">
                 {dashboardContent.description}
