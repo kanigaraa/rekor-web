@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole, authErrorResponse } from "@/lib/auth";
-import type { ApplicationStatus } from "@/generated/prisma";
+import type { ApplicationStatus } from "@/generated/prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
