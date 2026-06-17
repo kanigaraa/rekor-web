@@ -1,8 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole, authErrorResponse } from "@/lib/auth";
-
-const ALLOWED_ROLES = ["APPLICANT", "REVIEWER", "ADMIN", "SUPER_ADMIN"];
+import { updateRoleSchema } from "@/lib/validations";
 
 export async function PATCH(
   request: NextRequest,
@@ -12,15 +11,17 @@ export async function PATCH(
     const adminUser = await requireRole(["SUPER_ADMIN"], request);
     const resolvedParams = await params;
 
-    const body = await request.json();
-    const { role } = body;
+    const json = await request.json().catch(() => null);
+    const parsed = updateRoleSchema.safeParse(json);
 
-    if (!role || !ALLOWED_ROLES.includes(role)) {
+    if (!parsed.success) {
       return NextResponse.json(
         { message: "Invalid role" },
         { status: 400 }
       );
     }
+
+    const { role } = parsed.data;
 
     const targetUser = await prisma.user.findUnique({
       where: { id: resolvedParams.id },

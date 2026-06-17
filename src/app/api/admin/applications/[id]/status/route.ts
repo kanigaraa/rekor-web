@@ -1,8 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole, authErrorResponse } from "@/lib/auth";
-
-const ALLOWED_STATUSES = ["UNDER_REVIEW", "ACCEPTED", "REJECTED"];
+import { updateStatusSchema } from "@/lib/validations";
 
 export async function PATCH(
   request: NextRequest,
@@ -12,15 +11,17 @@ export async function PATCH(
     const user = await requireRole(["ADMIN", "SUPER_ADMIN"], request);
     const resolvedParams = await params;
 
-    const body = await request.json();
-    const { status } = body;
+    const json = await request.json().catch(() => null);
+    const parsed = updateStatusSchema.safeParse(json);
 
-    if (!status || !ALLOWED_STATUSES.includes(status)) {
+    if (!parsed.success) {
       return NextResponse.json(
         { message: "Invalid status" },
         { status: 400 }
       );
     }
+
+    const { status } = parsed.data;
 
     const application = await prisma.application.findUnique({
       where: { id: resolvedParams.id },
