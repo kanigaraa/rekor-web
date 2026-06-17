@@ -90,7 +90,8 @@ model Application {
   cvUrl        String?
   portfolioUrl String?
 
-  status ApplicationStatus @default(DRAFT)
+  status      ApplicationStatus @default(DRAFT)
+  submittedAt DateTime?
 
   applicant User     @relation(fields: [applicantId], references: [id], onDelete: Cascade)
   reviews   Review[]
