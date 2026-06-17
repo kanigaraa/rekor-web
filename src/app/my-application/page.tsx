@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -42,9 +44,9 @@ const mockApplication: ApplicantApplication | null = {
   phone: "08123456789",
   major: "Sistem Informasi",
   batch: "2024",
-  division: "Product & Tech",
+  division: "Biro Media dan Informasi",
   motivation:
-    "Saya ingin bergabung untuk mengembangkan kemampuan dan berkontribusi dalam organisasi.",
+    "Saya ingin mengembangkan kemampuan dan berkontribusi dalam kegiatan BEM UPNVJ.",
   cvUrl: "https://example.com/cv.pdf",
   portfolioUrl: "https://example.com/portfolio",
   status: "UNDER_REVIEW",
@@ -53,56 +55,50 @@ const mockApplication: ApplicantApplication | null = {
 };
 
 const emptyApplication: ApplicantApplication | null = null;
+const mockUserName = "Khaliz";
 
 export default function MyApplicationPage() {
   const application = mockApplication ?? emptyApplication;
 
   return (
-    <main className="min-h-screen bg-background px-4 py-8 text-text-primary sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-5xl space-y-6">
-        <PageHeader
-          title="Status Pendaftaran"
-          description="Lihat status dan ringkasan data pendaftaran kamu."
-        />
+    <DashboardShell
+      role="APPLICANT"
+      userName={mockUserName}
+      activeHref="/my-application"
+    >
+      <div className="space-y-6">
+        <PageHeader title="Status Pendaftaran" />
 
         {!application ? (
           <EmptyState
             title="Belum ada pendaftaran"
-            description="Mulai isi form pendaftaran untuk mengikuti proses seleksi organisasi."
             action={
-              <Link
-                href="/apply"
-                className="inline-flex h-10 items-center justify-center rounded-md border border-primary bg-primary px-4 text-sm font-medium text-white transition-colors hover:border-primary-hover hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              >
-                Isi Form Pendaftaran
+              <Link href="/apply" tabIndex={-1}>
+                <Button>Isi Form Pendaftaran</Button>
               </Link>
             }
           />
         ) : (
-          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
             <Card className="shadow-none">
               <CardHeader>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <CardTitle>{application.fullName}</CardTitle>
-                    <CardDescription>{application.division}</CardDescription>
+                    <CardDescription>Status saat ini</CardDescription>
+                    <CardTitle className="mt-2">
+                      {statusCopy[application.status]}
+                    </CardTitle>
                   </div>
                   <StatusBadge status={application.status} />
                 </div>
               </CardHeader>
-              <CardContent className="space-y-5">
-                <div className="rounded-md border border-border bg-surface-muted p-4">
-                  <p className="text-sm font-medium text-text-primary">
-                    {statusCopy[application.status]}
-                  </p>
-                  <p className="mt-1 text-sm text-text-muted">
-                    Tanggal submit: {application.submittedAt ?? "-"}
-                  </p>
-                </div>
-
-                <div className="grid gap-4 text-sm">
+              <CardContent>
+                <div className="grid gap-4 rounded-md border border-border bg-surface-muted p-4 text-sm">
                   <InfoRow label="Nama" value={application.fullName} />
-                  <InfoRow label="Divisi" value={application.division} />
+                  <InfoRow
+                    label="Bidang/Kementerian/Biro"
+                    value={application.division}
+                  />
                   <InfoRow
                     label="Tanggal submit"
                     value={application.submittedAt ?? "-"}
@@ -115,13 +111,16 @@ export default function MyApplicationPage() {
               <Card className="shadow-none">
                 <CardHeader>
                   <CardTitle>Ringkasan data pendaftaran</CardTitle>
-                  <CardDescription>Data utama yang kamu kirim.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4 text-sm sm:grid-cols-2">
+                  <InfoRow label="Nama" value={application.fullName} />
                   <InfoRow label="Nomor HP" value={application.phone} />
                   <InfoRow label="Jurusan" value={application.major} />
                   <InfoRow label="Angkatan" value={application.batch} />
-                  <InfoRow label="Divisi" value={application.division} />
+                  <InfoRow
+                    label="Bidang/Kementerian/Biro"
+                    value={application.division}
+                  />
                   <div className="sm:col-span-2">
                     <p className="font-medium text-text-primary">Motivasi</p>
                     <p className="mt-1 leading-6 text-text-muted">
@@ -134,7 +133,6 @@ export default function MyApplicationPage() {
               <Card className="shadow-none">
                 <CardHeader>
                   <CardTitle>Dokumen pendukung</CardTitle>
-                  <CardDescription>Link CV dan portofolio.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3 text-sm">
                   <DocumentLink label="Link CV" href={application.cvUrl} />
@@ -163,7 +161,7 @@ export default function MyApplicationPage() {
           </div>
         )}
       </div>
-    </main>
+    </DashboardShell>
   );
 }
 
