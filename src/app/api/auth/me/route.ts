@@ -1,16 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { getCurrentUser, toPublicUser } from "@/lib/auth";
+import { authErrorResponse, requireUser, toPublicUser } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  const user = await getCurrentUser(request);
+  try {
+    const user = await requireUser(request);
 
-  if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({
+      message: "Authenticated",
+      data: toPublicUser(user),
+    });
+  } catch (error) {
+    return authErrorResponse(error);
   }
-
-  return NextResponse.json({
-    message: "Authenticated",
-    data: toPublicUser(user),
-  });
 }
