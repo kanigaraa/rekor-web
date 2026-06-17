@@ -1,8 +1,9 @@
 "use client";
 
-import type { FormEvent } from "react";
+import { type FormEvent, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +17,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // TODO: Integrate with POST /api/auth/login when the auth API is ready.
+    setLoading(true);
+    setError("");
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Login failed");
+      }
+
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err) {
+      setError((err instanceof Error ? err.message : String(err)));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -39,6 +69,11 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form className="space-y-5" onSubmit={handleSubmit}>
+              {error && (
+                <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -63,8 +98,8 @@ export default function LoginPage() {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
-                Masuk
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Masuk..." : "Masuk"}
               </Button>
             </form>
 

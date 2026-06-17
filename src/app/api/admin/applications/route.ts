@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole, authErrorResponse } from "@/lib/auth";
-import type { ApplicationStatus } from "@prisma/client";
+import type { ApplicationStatus } from "@/generated/prisma";
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,6 +24,9 @@ export async function GET(request: NextRequest) {
 
     const applications = await prisma.application.findMany({
       where: whereClause,
+      include: {
+        reviews: true,
+      },
       orderBy: {
         createdAt: "desc",
       },
